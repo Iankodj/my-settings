@@ -1,5 +1,104 @@
 [user]
 	name = Ianko Djemerenov
 	email = iankodj@gmail.com
+
 [core]
-	autocrlf = true
+	autocrlf = false
+	whitespace = cr-at-eol
+	excludesfile=~/.gitignore
+
+[color]
+	ui = true
+
+[format]
+	pretty = %Cblue%h%Creset %Cgreen[%cr]%Creset (%an) %s
+
+[diff]
+    tool = vsdiffmerge
+[difftool]
+    prompt = true
+[difftool "vsdiffmerge"]
+    cmd = \"C:\\Program Files (x86)\\Microsoft Visual Studio 14.0\\Common7\\IDE\\vsdiffmerge.exe\" //t \"$LOCAL\" \"$REMOTE\"
+    keepbackup = false
+    trustexistcode = true
+
+[merge]
+    tool = vsdiffmerge
+[mergetool]
+    prompt = true
+[mergetool "vsdiffmerge"]
+    cmd = \"C:\\Program Files (x86)\\Microsoft Visual Studio 14.0\\Common7\\IDE\\vsdiffmerge.exe\" //m \"$REMOTE\" \"$LOCAL\" \"$BASE\" \"$MERGED\" 
+    keepbackup = false
+    trustexistcode = true
+
+[github]
+
+[alias]
+	c = commit -m
+	ca = commit -am
+	ch = cherry-pick
+	co = checkout
+	pr = pull --rebase
+	a = add
+	d = diff
+	dic = diff --cached
+	ps = push
+	s = status
+	out = log origin..HEAD
+	qpl = log --pretty=\"%Cblue%h%Creset %Cgreen[%cr]%Creset %s\" origin/production..origin/master
+	l = log --all --graph --pretty=format:'%Cred%h%Creset -%C(yellow)%d%Creset %s %Cgreen(%cr)%Creset %Cblue%an%Creset' --abbrev-commit --date=relative
+	ci = commit
+	ca = commit --amend
+	eu = "!f() { git ls-files --unmerged | cut -f2 | sort -u ; }; vim `f`"
+	au = "!f() { git ls-files --unmerged | cut -f2 | sort -u ; }; git add `f`"
+	cp = "!git checkout production && git pull --rebase && git cherry-pick master && git push && git checkout master"
+	cpm = "!git checkout production && git pull --rebase && git cherry-pick master -m 1 && git push && git checkout master"
+	cpp = "!f() { git checkout production && git pull --rebase && git cherry-pick $1 && git push && git checkout master ; }; f"
+	catchup = "!git fetch origin; git rebase origin/master"
+	ctags = !.git/hooks/ctags
+	sync = "!git pl && git push"
+	# Alternate log display from Scott Chacon
+	lol = log --pretty=oneline --abbrev-commit --graph --decorate
+	sub = submodule update --init
+
+	# Other useful aliases:
+	unstage = reset HEAD
+	staged = diff --cached
+	unstaged = diff
+	current-branch = !git symbolic-ref -q HEAD | sed -e 's|^refs/heads/||'
+	# Usage: git track origin/feature-123-login-form
+	track = checkout -t
+
+	subu = submodule update
+
+	# cherry-pick from ... to ...
+    cpf2 = "!f() { git checkout $2 && git pull --rebase && git cherry-pick $1 && git push && git checkout $1 ; }; f"
+
+    # cherry-pick from current to ....
+    cp2 = "!f() { git cpf2 `git current` $1 ; }; f"
+
+    # cherry-pick from master to production
+    cpp = "!f() { git cpf2 master production ; }; f"
+	
+	# jshint only modified files
+	jshint = "!gulp jshint --files=\"{`git diff --name-only | tr '\n' ','`}\""
+
+	#############################
+	# public/private mirrors aliases
+	#############################
+	pl = "!git fetch --prune && git rebase --preserve-merges `git rev-parse --abbrev-ref --symbolic-full-name @{u}`"
+
+	# Bring alias from public repo to private
+	put-in-master = "!git checkout master && git pl && git cherry-pick core/master && git push && git checkout core-master"
+
+	# use this when cherry picking from private to public
+	drop-deleted-by-us = "!git rm `git status --porcelain | grep ^DU | cut -d' ' -f2`"
+
+	# skip a cherry-pick when in progress
+	skip-cherry = "!git reset; git clean -df; git cherry-pick --continue" 
+[branch]
+	autosetuprebase = always
+[push]
+	default = tracking
+[http]
+	postBuffer = 524288000

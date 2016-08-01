@@ -1,0 +1,7 @@
+*.csproj
+*.editorconfig
+playground/editor-play.html
+playground/tooltip-play.html
+playground/window-play.html
+.idea/
+ianko-test/
